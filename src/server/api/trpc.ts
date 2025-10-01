@@ -9,6 +9,7 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import { env } from "~/env";
 
 import { db } from "~/server/db";
 
@@ -104,3 +105,22 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+/**
+ * Private (authenticated) procedure
+ *
+ * A simple middleware that checks if the user is authenticated. If not, it throws an error.
+ * You can use this to protect routes that require authentication.
+ */
+export const privateProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(async ({ ctx, next }) => {
+    if (
+      ctx.headers.get("admin_user") === env.ADMIN_USERNAME &&
+      ctx.headers.get("admin_pass") === env.ADMIN_PASSWORD
+    ) {
+      return next();
+    }
+
+    throw new Error("Unauthorized");
+  });
