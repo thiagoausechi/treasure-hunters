@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Fira_Code, Press_Start_2P } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -11,16 +11,22 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const geist = Geist({
+const firaCode = Fira_Code({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-fira-code",
+});
+
+const pressStart2P = Press_Start_2P({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-press-start-2p",
 });
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en" className={`${firaCode.variable} ${pressStart2P.variable}`}>
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
