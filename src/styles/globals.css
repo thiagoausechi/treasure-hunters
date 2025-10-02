@@ -2,7 +2,6 @@
 @import "tw-animate-css";
 
 :root {
-  --background: oklch(0.9594 0.0201 97.53);
   --foreground: oklch(0.3483 0.0598 42.556);
   --card: oklch(0.9896 0.0106 100.8174);
   --card-foreground: oklch(0.3483 0.0598 42.556);
@@ -67,7 +66,6 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -130,7 +128,14 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground tracking-normal;
+    @apply text-foreground mx-auto max-w-2xl tracking-normal;
   }
+}
+
+body {
+  background-image: url("/assets/img/background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
