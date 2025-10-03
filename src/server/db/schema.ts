@@ -28,6 +28,8 @@ export const players = createTable(
   (t) => [index("name_idx").on(t.name)],
 );
 
+export type Player = typeof players.$inferSelect;
+
 export const matches = createTable("match", (d) => ({
   id: d
     .uuid()
@@ -43,3 +45,5 @@ export const matches = createTable("match", (d) => ({
     .notNull(),
   updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 }));
+
+export type Match = typeof matches.$inferSelect;
