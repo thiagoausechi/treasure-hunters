@@ -132,6 +132,11 @@
   body {
     @apply text-foreground mx-auto max-w-2xl tracking-normal;
   }
+
+  html {
+    overscroll-behavior: none;
+    font-size: var(--font-size);
+  }
 }
 
 body {
