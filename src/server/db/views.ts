@@ -18,6 +18,8 @@ export const playerRankingsView = pgView("treasure-hunters_player_rankings", {
   rank: bigint("rank", { mode: "number" }),
 }).existing();
 
+export type PlayerRanking = typeof playerRankingsView.$inferSelect;
+
 export const matchMetricsView = pgView("treasure-hunters_match_metrics", {
   matchId: uuid("match_id").primaryKey(),
   createdAt: timestamp("createdAt", { withTimezone: true }),
@@ -31,6 +33,8 @@ export const matchMetricsView = pgView("treasure-hunters_match_metrics", {
   totalScore: integer("total_score"),
   titansClashScore: bigint("titans_clash_score", { mode: "number" }),
 }).existing();
+
+export type MatchMetric = typeof matchMetricsView.$inferSelect;
 
 export const relevanceScoreRankingView = pgView(
   "treasure-hunters_relevance_score_ranking",
@@ -49,3 +53,6 @@ export const relevanceScoreRankingView = pgView(
     relevanceScore: decimal("relevance_score"),
   },
 ).existing();
+
+export type RelevanceScoreRanking =
+  typeof relevanceScoreRankingView.$inferSelect;
