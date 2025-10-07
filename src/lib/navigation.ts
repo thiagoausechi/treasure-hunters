@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import type { ComponentType } from "react";
 import { LeaderboardMatchClosest } from "~/components/layout/leaderboard/by-match/closest";
+import { LeaderboardMatchHighestScore } from "~/components/layout/leaderboard/by-match/highest-score";
 import { LeaderboardMatchRecents } from "~/components/layout/leaderboard/by-match/recent";
 import { LeaderboardMatchRelevance } from "~/components/layout/leaderboard/by-match/relevance";
 import { LeaderboardPlayerByScoreDiff } from "~/components/layout/leaderboard/by-player/by-score-diff";
@@ -62,8 +63,8 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       },
       {
         slug: "highest-score",
-        label: "Maior Pontuação",
-        component: null,
+        label: "Pontuação",
+        component: LeaderboardMatchHighestScore,
       },
       {
         slug: "clash-of-titans",
