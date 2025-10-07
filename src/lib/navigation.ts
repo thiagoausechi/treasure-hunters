@@ -1,5 +1,6 @@
 import type { Route } from "next";
 import type { ComponentType } from "react";
+import { LeaderboardPlayerByScoreDiff } from "~/components/layout/leaderboard/by-player/by-score-diff";
 import { LeaderboardPlayerByWinRate } from "~/components/layout/leaderboard/by-player/by-win-rate";
 import { LeaderboardPlayerByWins } from "~/components/layout/leaderboard/by-player/by-wins";
 
@@ -33,7 +34,7 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "by-score-diff",
         label: "Saldo",
-        component: null,
+        component: LeaderboardPlayerByScoreDiff,
       },
     ],
   },
