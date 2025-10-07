@@ -13,7 +13,10 @@ export const playerRankingsView = pgView("treasure-hunters_player_rankings", {
   playerName: varchar("player_name", { length: 256 }),
   totalMatches: bigint("total_matches", { mode: "number" }),
   totalWins: bigint("total_wins", { mode: "number" }),
+  totalScoreFor: bigint("total_score_for", { mode: "number" }),
+  totalScoreAgainst: bigint("total_score_against", { mode: "number" }),
   scoreDifference: bigint("score_difference", { mode: "number" }),
+  performanceTier: bigint("performance_tier", { mode: "number" }),
   winRate: decimal("win_rate"),
   rank: bigint("rank", { mode: "number" }),
 }).existing();
