@@ -1,5 +1,6 @@
 import type { Route } from "next";
 import type { ComponentType } from "react";
+import { LeaderboardPlayerByWinRate } from "~/components/layout/leaderboard/by-player/by-win-rate";
 import { LeaderboardPlayerByWins } from "~/components/layout/leaderboard/by-player/by-wins";
 
 export type Subcategory = {
@@ -27,7 +28,7 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "by-win-rate",
         label: "Win Rate",
-        component: null,
+        component: LeaderboardPlayerByWinRate,
       },
       {
         slug: "by-score-diff",
