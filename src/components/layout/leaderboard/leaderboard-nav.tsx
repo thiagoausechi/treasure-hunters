@@ -63,15 +63,18 @@ function SubcategoriesNav({ activeCategory, pathname }: NavItemProps) {
         const fullPath =
           `${LEADERBOARD_BASE_PATH}/${activeCategory}/${slug}` as Route;
 
+        const isActive = pathname === fullPath;
+
         return (
           <NextLink
             key={fullPath}
             href={fullPath}
             className={cn(
               buttonVariants({
-                variant: pathname === fullPath ? "default" : "secondary",
+                variant: isActive ? "default" : "secondary",
                 size: "sm",
               }),
+              { "font-bold": isActive },
               "text-xs",
             )}
           >
