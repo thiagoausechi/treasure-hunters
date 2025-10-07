@@ -1,5 +1,6 @@
 import type { Route } from "next";
 import type { ComponentType } from "react";
+import { LeaderboardMatchClosest } from "~/components/layout/leaderboard/by-match/closest";
 import { LeaderboardMatchRecents } from "~/components/layout/leaderboard/by-match/recent";
 import { LeaderboardMatchRelevance } from "~/components/layout/leaderboard/by-match/relevance";
 import { LeaderboardPlayerByScoreDiff } from "~/components/layout/leaderboard/by-player/by-score-diff";
@@ -57,7 +58,7 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "closest",
         label: "Acirradas",
-        component: null,
+        component: LeaderboardMatchClosest,
       },
       {
         slug: "highest-score",
