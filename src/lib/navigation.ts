@@ -1,5 +1,6 @@
 import type { Route } from "next";
 import type { ComponentType } from "react";
+import { LeaderboardMatchClashOfTitans } from "~/components/layout/leaderboard/by-match/clash-of-titans";
 import { LeaderboardMatchClosest } from "~/components/layout/leaderboard/by-match/closest";
 import { LeaderboardMatchHighestScore } from "~/components/layout/leaderboard/by-match/highest-score";
 import { LeaderboardMatchRecents } from "~/components/layout/leaderboard/by-match/recent";
@@ -69,7 +70,7 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "clash-of-titans",
         label: "Duelo de Titãs",
-        component: null,
+        component: LeaderboardMatchClashOfTitans,
       },
     ],
   },
