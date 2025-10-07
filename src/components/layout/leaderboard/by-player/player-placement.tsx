@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { GameIcon } from "~/components/ui/game-icon";
 import { cn } from "~/lib/utils";
 import { Stat, type StatProps } from "../stats";
 
@@ -57,16 +58,12 @@ export function PlayerPlacement(props: PlayerPlacementProps) {
 
 function Rank({ rank }: { rank: number }) {
   switch (rank) {
-    case 1: // TODO: Add Golden Clover icon
-      return (
-        <span className="font-serif text-2xl text-yellow-500">#{rank}</span>
-      );
-    case 2: // TODO: Add Silver Chalice icon
-      return <span className="font-serif text-2xl text-gray-400">#{rank}</span>;
-    case 3: // TODO: Add Bronze Chalice icon
-      return (
-        <span className="font-serif text-2xl text-yellow-800">#{rank}</span>
-      );
+    case 1:
+      return <GameIcon name="GoldenClover" size={32 * 1.75} />;
+    case 2:
+      return <GameIcon name="SilverChalice" size={32 * 1.5} />;
+    case 3:
+      return <GameIcon name="BronzeChalice" />;
     default:
       return (
         <span className="text-muted-foreground font-serif text-2xl">
