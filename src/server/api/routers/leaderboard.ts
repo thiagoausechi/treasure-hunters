@@ -48,6 +48,16 @@ export const leaderboardRouter = createTRPCRouter({
     }),
 
   // == Ranking de Partidas ==
+  recentMatches: publicProcedure
+    .input(z.object({ limit: z.number().min(1).max(100).default(20) }))
+    .query(({ ctx, input }) => {
+      return ctx.db
+        .select()
+        .from(matchMetricsView)
+        .orderBy(desc(matchMetricsView.createdAt))
+        .limit(input.limit);
+    }),
+
   byRelevanceScore: publicProcedure
     .input(z.object({ limit: z.number().min(1).max(100).default(20) }))
     .query(({ ctx, input }) => {
