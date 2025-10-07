@@ -1,5 +1,6 @@
 import type { Route } from "next";
 import type { ComponentType } from "react";
+import { LeaderboardPlayerByWins } from "~/components/layout/leaderboard/by-player/by-wins";
 
 export type Subcategory = {
   slug: string;
@@ -21,7 +22,7 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "by-wins",
         label: "Vitórias",
-        component: null,
+        component: LeaderboardPlayerByWins,
       },
       {
         slug: "by-win-rate",
@@ -87,5 +88,5 @@ export function findContentBySlugs(
     ({ slug }) => slug === subcategorySlug,
   );
 
-  return subcategory?.component ?? null;
+  return subcategory;
 }
