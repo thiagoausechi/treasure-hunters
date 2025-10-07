@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   Card,
   CardAction,
@@ -9,13 +10,14 @@ import { cn } from "~/lib/utils";
 import { Stat, type StatProps } from "../stats";
 
 export interface PlayerPlacementProps {
-  playerName: string | null;
+  playerName: ReactNode;
+  badge?: ReactNode;
   rank: number | null;
   stats: Array<StatProps>;
 }
 
 export function PlayerPlacement(props: PlayerPlacementProps) {
-  const { playerName, rank, stats } = props;
+  const { playerName, badge, rank, stats } = props;
 
   return (
     <Card
@@ -31,7 +33,10 @@ export function PlayerPlacement(props: PlayerPlacementProps) {
           <Rank rank={rank ?? 0} />
         </CardTitle>
         <CardAction>
-          <h3 className="text-primary font-bold">{playerName}</h3>
+          <div className="flex flex-col justify-end">
+            <h3 className="text-primary font-bold">{playerName}</h3>
+            {badge}
+          </div>
         </CardAction>
       </CardHeader>
       <CardContent>
