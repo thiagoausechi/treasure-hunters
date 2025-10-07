@@ -25,11 +25,12 @@ export function LeaderboardPlayerByWinRate() {
         </CardContent>
       </Card>
 
-      {[...data].map((ranking) => (
+      {data.map((ranking, index) => (
         <PlayerPlacement
           key={ranking.playerId}
           stats={[WinRate(ranking), Victories(ranking)]}
           {...ranking}
+          rank={index + 1}
         />
       ))}
     </div>
