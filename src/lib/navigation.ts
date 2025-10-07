@@ -1,6 +1,7 @@
 import type { Route } from "next";
 import type { ComponentType } from "react";
 import { LeaderboardMatchRecents } from "~/components/layout/leaderboard/by-match/recent";
+import { LeaderboardMatchRelevance } from "~/components/layout/leaderboard/by-match/relevance";
 import { LeaderboardPlayerByScoreDiff } from "~/components/layout/leaderboard/by-player/by-score-diff";
 import { LeaderboardPlayerByWinRate } from "~/components/layout/leaderboard/by-player/by-win-rate";
 import { LeaderboardPlayerByWins } from "~/components/layout/leaderboard/by-player/by-wins";
@@ -51,7 +52,7 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "relevance",
         label: "Relevância",
-        component: null,
+        component: LeaderboardMatchRelevance,
       },
       {
         slug: "closest",
