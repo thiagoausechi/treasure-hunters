@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import {
   Card,
   CardContent,
@@ -37,7 +38,12 @@ export function MatchSummary(props: Props) {
             <GameIcon name="BluePlayer" />
             {blueWins && <GameIcon name="GoldenChalice" />}
             <div>
-              <div className="font-bold">{bluePlayerName}</div>
+              <NextLink
+                href={`/profile/${props.bluePlayerId}`}
+                prefetch={false}
+              >
+                <h2 className="font-bold">{bluePlayerName}</h2>
+              </NextLink>
               <div>{blueScore?.toLocaleString("pt-BR")}</div>
             </div>
           </div>
@@ -55,7 +61,12 @@ export function MatchSummary(props: Props) {
           {/* Pink Player */}
           <div className="flex justify-end gap-2 text-right">
             <div>
-              <div className="font-bold">{pinkPlayerName}</div>
+              <NextLink
+                href={`/profile/${props.pinkPlayerId}`}
+                prefetch={false}
+              >
+                <h2 className="font-bold">{pinkPlayerName}</h2>
+              </NextLink>
               <div>{pinkScore?.toLocaleString("pt-BR")}</div>
             </div>
             {pinkWins && <GameIcon name="GoldenChalice" />}

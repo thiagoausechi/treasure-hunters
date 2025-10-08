@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import type { ReactNode } from "react";
 import {
   Card,
@@ -11,6 +12,7 @@ import { cn } from "~/lib/utils";
 import { Stat, type StatProps } from "../stats";
 
 export interface PlayerPlacementProps {
+  playerId: string;
   playerName: ReactNode;
   badge?: ReactNode;
   rank: number | null;
@@ -18,7 +20,7 @@ export interface PlayerPlacementProps {
 }
 
 export function PlayerPlacement(props: PlayerPlacementProps) {
-  const { playerName, badge, rank, stats } = props;
+  const { playerId, playerName, badge, rank, stats } = props;
 
   return (
     <Card
@@ -35,7 +37,11 @@ export function PlayerPlacement(props: PlayerPlacementProps) {
         </CardTitle>
         <CardAction>
           <div className="flex flex-col justify-end">
-            <h3 className="text-primary text-right font-bold">{playerName}</h3>
+            <NextLink href={`/profile/${playerId}`}>
+              <h3 className="text-primary text-right font-bold">
+                {playerName}
+              </h3>
+            </NextLink>
             {badge}
           </div>
         </CardAction>
