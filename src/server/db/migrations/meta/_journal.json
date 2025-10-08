@@ -15,6 +15,13 @@
       "when": 1759951965433,
       "tag": "0001_swift_spacker_dave",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759956924786,
+      "tag": "0002_empty_firelord",
+      "breakpoints": true
     }
   ]
 }

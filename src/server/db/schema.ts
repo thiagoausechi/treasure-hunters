@@ -9,6 +9,21 @@ import { index, pgEnum, pgTableCreator } from "drizzle-orm/pg-core";
  */
 export const createTable = pgTableCreator((name) => `treasure-hunters_${name}`);
 
+export const adminUsers = createTable("admin_user", (d) => ({
+  id: d
+    .uuid()
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  name: d.varchar("name", { length: 256 }).notNull(),
+  passwordHash: d.varchar("password_hash", { length: 256 }).notNull(),
+  createdAt: d
+    .timestamp({ withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+}));
+
+export type AdminUser = typeof adminUsers.$inferSelect;
+
 export const players = createTable(
   "player",
   (d) => ({
@@ -46,6 +61,9 @@ export const matches = createTable("match", (d) => ({
   status: matchStatusEnum("status").default("PENDING").notNull(),
   durationInSeconds: d.integer(),
 
+  startedByAdminId: d
+    .uuid()
+    .references(() => adminUsers.id, { onDelete: "set null" }),
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)

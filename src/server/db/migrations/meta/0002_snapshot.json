@@ -1,0 +1,331 @@
+{
+  "id": "18aebb6d-6e6d-4db8-8b26-11e6f38fc97c",
+  "prevId": "b5fa7b88-8d1e-433b-ac78-062dc460efa6",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.treasure-hunters_admin_user": {
+      "name": "treasure-hunters_admin_user",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.treasure-hunters_match_collected_item": {
+      "name": "treasure-hunters_match_collected_item",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "matchId": {
+          "name": "matchId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "playerId": {
+          "name": "playerId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_name": {
+          "name": "item_name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "treasure-hunters_match_collected_item_matchId_treasure-hunters_match_id_fk": {
+          "name": "treasure-hunters_match_collected_item_matchId_treasure-hunters_match_id_fk",
+          "tableFrom": "treasure-hunters_match_collected_item",
+          "tableTo": "treasure-hunters_match",
+          "columnsFrom": [
+            "matchId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "treasure-hunters_match_collected_item_playerId_treasure-hunters_player_id_fk": {
+          "name": "treasure-hunters_match_collected_item_playerId_treasure-hunters_player_id_fk",
+          "tableFrom": "treasure-hunters_match_collected_item",
+          "tableTo": "treasure-hunters_player",
+          "columnsFrom": [
+            "playerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.treasure-hunters_match": {
+      "name": "treasure-hunters_match",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "bluePlayerId": {
+          "name": "bluePlayerId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pinkPlayerId": {
+          "name": "pinkPlayerId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blueScore": {
+          "name": "blueScore",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pinkScore": {
+          "name": "pinkScore",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "match_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING'"
+        },
+        "durationInSeconds": {
+          "name": "durationInSeconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "startedByAdminId": {
+          "name": "startedByAdminId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "treasure-hunters_match_bluePlayerId_treasure-hunters_player_id_fk": {
+          "name": "treasure-hunters_match_bluePlayerId_treasure-hunters_player_id_fk",
+          "tableFrom": "treasure-hunters_match",
+          "tableTo": "treasure-hunters_player",
+          "columnsFrom": [
+            "bluePlayerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "treasure-hunters_match_pinkPlayerId_treasure-hunters_player_id_fk": {
+          "name": "treasure-hunters_match_pinkPlayerId_treasure-hunters_player_id_fk",
+          "tableFrom": "treasure-hunters_match",
+          "tableTo": "treasure-hunters_player",
+          "columnsFrom": [
+            "pinkPlayerId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "treasure-hunters_match_startedByAdminId_treasure-hunters_admin_user_id_fk": {
+          "name": "treasure-hunters_match_startedByAdminId_treasure-hunters_admin_user_id_fk",
+          "tableFrom": "treasure-hunters_match",
+          "tableTo": "treasure-hunters_admin_user",
+          "columnsFrom": [
+            "startedByAdminId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.treasure-hunters_player": {
+      "name": "treasure-hunters_player",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "name_idx": {
+          "name": "name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "treasure-hunters_player_email_unique": {
+          "name": "treasure-hunters_player_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.match_status": {
+      "name": "match_status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "COMPLETED"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
