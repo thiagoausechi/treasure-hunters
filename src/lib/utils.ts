@@ -26,3 +26,17 @@ export function formatTimeAgo(date: Date) {
     return `agora mesmo`;
   }
 }
+
+export function formatPlural({
+  count,
+  singular,
+  plural,
+}: {
+  count?: number | null;
+  singular: string;
+  plural: string;
+}) {
+  if (!count || count === 0) return plural;
+  if (count === 1) return singular;
+  return plural;
+}
