@@ -1,11 +1,15 @@
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import { createTRPCRouter, privateProcedure } from "~/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  gameClientProcedure,
+} from "~/server/api/trpc";
 import { matchCollectedItems, matches } from "~/server/db/schema";
 
 export const gameMatchRouter = createTRPCRouter({
-  start: privateProcedure
+  start: adminProcedure
     .input(
       z.object({
         bluePlayerId: z.string().uuid(),
@@ -41,7 +45,7 @@ export const gameMatchRouter = createTRPCRouter({
       };
     }),
 
-  end: privateProcedure
+  end: gameClientProcedure
     .input(
       z.object({
         blueScore: z.number().int().min(0),
@@ -106,7 +110,7 @@ export const gameMatchRouter = createTRPCRouter({
       };
     }),
 
-  cancel: privateProcedure.mutation(async ({ ctx }) => {
+  cancel: adminProcedure.mutation(async ({ ctx }) => {
     const pendingMatch = await ctx.db.query.matches.findFirst({
       where: eq(matches.status, "PENDING"),
     });

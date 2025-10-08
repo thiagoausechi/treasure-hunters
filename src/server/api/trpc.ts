@@ -6,12 +6,15 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
+import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { env } from "~/env";
 
 import { db } from "~/server/db";
+import { auth } from "../auth";
 
 /**
  * 1. CONTEXT
@@ -19,17 +22,44 @@ import { db } from "~/server/db";
  * This section defines the "contexts" that are available in the backend API.
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
- *
- * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
- * wrap this and provides the required context.
- *
- * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
+
+interface CreateContextOptions {
+  session: Session | null;
+  headers: Headers;
+}
+
+/**
+ * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
+ * it from here.
+ *
+ * Examples of things you may need it for:
+ * - testing, so we don't have to mock Next.js' req/res
+ * - tRPC's `createSSGHelpers`, where we don't have req/res
+ *
+ * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
+ */
+const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     db,
     ...opts,
   };
+};
+
+/**
+ * This is the actual context you will use in your router. It will be used to process every request
+ * that goes through your tRPC endpoint.
+ *
+ * @see https://trpc.io/docs/context
+ */
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+  // Get the session from the server using the auth wrapper function
+  const session = await auth();
+
+  return createInnerTRPCContext({
+    session,
+    headers: new Headers(opts.req?.headers as Record<string, string>),
+  });
 };
 
 /**
@@ -106,21 +136,27 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
-/**
- * Private (authenticated) procedure
- *
- * A simple middleware that checks if the user is authenticated. If not, it throws an error.
- * You can use this to protect routes that require authentication.
- */
-export const privateProcedure = t.procedure
+export const adminProcedure = t.procedure
   .use(timingMiddleware)
   .use(async ({ ctx, next }) => {
-    if (
-      ctx.headers.get("admin_user") === env.ADMIN_USERNAME &&
-      ctx.headers.get("admin_pass") === env.ADMIN_PASSWORD
-    ) {
-      return next();
-    }
+    if (!ctx.session?.user) throw new TRPCError({ code: "UNAUTHORIZED" });
 
-    throw new Error("Unauthorized");
+    return next({
+      ctx: {
+        ...ctx,
+        // Garante que a sessão e o usuário não são nulos daqui para frente
+        session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
   });
+
+export const gameClientProcedure = t.procedure.use(async ({ ctx, next }) => {
+  const apiKey = ctx.headers.get("x-api-key");
+
+  if (apiKey === env.GAME_CLIENT_API_KEY) return next();
+
+  throw new TRPCError({
+    code: "UNAUTHORIZED",
+    message: "API Key inválida ou não fornecida.",
+  });
+});
