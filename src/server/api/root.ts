@@ -1,5 +1,6 @@
 import { gameMatchRouter } from "~/server/api/routers/game-match";
 import { leaderboardRouter } from "~/server/api/routers/leaderboard";
+import { profileRouter } from "~/server/api/routers/profile";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -10,6 +11,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
   gameMatch: gameMatchRouter,
   leaderboard: leaderboardRouter,
+  profile: profileRouter,
 });
 
 // export type definition of API
