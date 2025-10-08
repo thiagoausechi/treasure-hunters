@@ -105,4 +105,20 @@ export const gameMatchRouter = createTRPCRouter({
         message: "Resultados da partida registrados com sucesso.",
       };
     }),
+
+  cancel: privateProcedure.mutation(async ({ ctx }) => {
+    const pendingMatch = await ctx.db.query.matches.findFirst({
+      where: eq(matches.status, "PENDING"),
+    });
+
+    if (!pendingMatch)
+      return {
+        success: false,
+        message: "Nenhuma partida em aberto para cancelar.",
+      };
+
+    await ctx.db.delete(matches).where(eq(matches.id, pendingMatch.id));
+
+    return { success: true, message: "A partida em aberto foi cancelada." };
+  }),
 });
