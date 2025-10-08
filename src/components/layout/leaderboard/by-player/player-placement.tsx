@@ -24,11 +24,10 @@ export function PlayerPlacement(props: PlayerPlacementProps) {
 
   return (
     <Card
-      className={cn("border-l-8", {
-        "border-l-yellow-500 shadow-yellow-500": rank === 1,
-        "border-l-gray-400 shadow-gray-400": rank === 2,
-        "border-l-yellow-800 shadow-yellow-800": rank === 3,
-        "border-l-muted-foreground": rank && rank > 3,
+      className={cn("border-l-muted-foreground border-l-8", {
+        "border-l-golden shadow-golden": rank === 1,
+        "border-l-silver shadow-silver": rank === 2,
+        "border-l-bronze shadow-bronze": rank === 3,
       })}
     >
       <CardHeader>
@@ -38,7 +37,13 @@ export function PlayerPlacement(props: PlayerPlacementProps) {
         <CardAction>
           <div className="flex flex-col justify-end">
             <NextLink href={`/profile/${playerId}`}>
-              <h3 className="text-primary text-right font-bold">
+              <h3
+                className={cn("muted-foreground text-right font-bold", {
+                  "text-golden-foreground": rank === 1,
+                  "text-silver-foreground": rank === 2,
+                  "text-bronze-foreground": rank === 3,
+                })}
+              >
                 {playerName}
               </h3>
             </NextLink>

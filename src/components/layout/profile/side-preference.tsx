@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { GameIcon } from "~/components/ui/game-icon";
-import { Progress } from "~/components/ui/progress";
+import { PlayerSideProgress } from "~/components/ui/progress";
 import { cn, formatPlural } from "~/lib/utils";
 import { Stat } from "../leaderboard/stats";
 
@@ -103,10 +103,7 @@ export function ProfileSidePreference(props: Props) {
             </p>
           }
         />
-        <Progress
-          value={bluePercentage * 100}
-          className="data-[slot=progress]:bg-pink-500"
-        />
+        <PlayerSideProgress bluePercentage={bluePercentage * 100} />
       </CardContent>
     </Card>
   );

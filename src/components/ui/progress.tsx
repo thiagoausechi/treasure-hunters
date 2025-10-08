@@ -28,4 +28,15 @@ function Progress({
   );
 }
 
-export { Progress };
+function PlayerSideProgress({
+  bluePercentage,
+  ...props
+}: React.ComponentProps<typeof ProgressPrimitive.Root> & {
+  bluePercentage: number;
+}) {
+  return (
+    <Progress className="bg-pink *:bg-blue" {...props} value={bluePercentage} />
+  );
+}
+
+export { PlayerSideProgress, Progress };

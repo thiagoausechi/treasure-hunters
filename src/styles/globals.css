@@ -66,6 +66,19 @@
 }
 
 @theme inline {
+  --color-golden: oklch(0.7927 0.1371 85.49);
+  --color-golden-foreground: oklch(0.4621 0.0937 64.75);
+  --color-silver: oklch(0.6999 0.0055 228.85);
+  --color-silver-foreground: oklch(0.452 0.0041 247.92);
+  --color-bronze: oklch(0.7229 0.1184 51.6);
+  --color-bronze-foreground: oklch(0.4594 0.0744 50.46);
+
+  --color-blue: oklch(0.8045 0.1416 221.05);
+  --color-pink: oklch(0.7062 0.2568 326.57);
+
+  --color-positive: oklch(0.6004 0.1008 139.8436);
+  --color-negative: oklch(0.5993 0.1597 24.9573);
+
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);

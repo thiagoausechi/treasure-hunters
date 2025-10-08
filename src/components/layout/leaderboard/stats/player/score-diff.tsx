@@ -7,8 +7,8 @@ export function ScoreDiff({ scoreDifference }: PlayerRanking) {
     value: (
       <p
         className={cn("text-xl font-bold", {
-          "text-chart-4": scoreDifference && scoreDifference > 0,
-          "text-destructive": scoreDifference && scoreDifference < 0,
+          "text-positive": scoreDifference && scoreDifference > 0,
+          "text-negative": scoreDifference && scoreDifference < 0,
         })}
       >
         {scoreDifference?.toLocaleString("pt-BR")}
@@ -31,7 +31,7 @@ export function ScoreDiffBalance(ranking: PlayerRanking) {
         <span
           className={cn({
             "text-xl font-bold": moreScore || equalScore,
-            "text-chart-4": moreScore && !equalScore,
+            "text-positive": moreScore && !equalScore,
           })}
         >
           {moreScore && !equalScore && "▲ "}
@@ -41,7 +41,7 @@ export function ScoreDiffBalance(ranking: PlayerRanking) {
         <span
           className={cn({
             "text-xl font-bold": !moreScore || equalScore,
-            "text-destructive": !moreScore && !equalScore,
+            "text-negative": !moreScore && !equalScore,
           })}
         >
           {totalScoreAgainst.toLocaleString("pt-BR")}
