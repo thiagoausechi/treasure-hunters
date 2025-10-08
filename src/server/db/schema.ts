@@ -1,5 +1,5 @@
-import { sql } from "drizzle-orm";
-import { index, pgTableCreator } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { index, pgEnum, pgTableCreator } from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -30,15 +30,22 @@ export const players = createTable(
 
 export type Player = typeof players.$inferSelect;
 
+export const matchStatusEnum = pgEnum("match_status", ["PENDING", "COMPLETED"]);
+
 export const matches = createTable("match", (d) => ({
   id: d
     .uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
   bluePlayerId: d.uuid().references(() => players.id),
-  blueScore: d.integer().default(0).notNull(),
   pinkPlayerId: d.uuid().references(() => players.id),
-  pinkScore: d.integer().default(0).notNull(),
+
+  blueScore: d.integer(),
+  pinkScore: d.integer(),
+
+  status: matchStatusEnum("status").default("PENDING").notNull(),
+  durationInSeconds: d.integer(),
+
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
@@ -47,3 +54,47 @@ export const matches = createTable("match", (d) => ({
 }));
 
 export type Match = typeof matches.$inferSelect;
+
+export const matchCollectedItems = createTable("match_collected_item", (d) => ({
+  id: d
+    .uuid()
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  matchId: d
+    .uuid()
+    .references(() => matches.id, { onDelete: "cascade" })
+    .notNull(),
+  playerId: d
+    .uuid()
+    .references(() => players.id)
+    .notNull(),
+  itemName: d.varchar("item_name", { length: 256 }).notNull(),
+  quantity: d.integer().default(1).notNull(),
+}));
+
+export type MatchCollectedItem = typeof matchCollectedItems.$inferSelect;
+
+export const matchesRelations = relations(matches, ({ one, many }) => ({
+  bluePlayer: one(players, {
+    fields: [matches.bluePlayerId],
+    references: [players.id],
+    relationName: "blue_player",
+  }),
+  pinkPlayer: one(players, {
+    fields: [matches.pinkPlayerId],
+    references: [players.id],
+    relationName: "pink_player",
+  }),
+  collectedItems: many(matchCollectedItems),
+}));
+
+export const itemsRelations = relations(matchCollectedItems, ({ one }) => ({
+  match: one(matches, {
+    fields: [matchCollectedItems.matchId],
+    references: [matches.id],
+  }),
+  player: one(players, {
+    fields: [matchCollectedItems.playerId],
+    references: [players.id],
+  }),
+}));
