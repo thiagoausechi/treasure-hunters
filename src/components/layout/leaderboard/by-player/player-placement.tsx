@@ -35,7 +35,7 @@ export function PlayerPlacement(props: PlayerPlacementProps) {
         </CardTitle>
         <CardAction>
           <div className="flex flex-col justify-end">
-            <h3 className="text-primary font-bold">{playerName}</h3>
+            <h3 className="text-primary text-right font-bold">{playerName}</h3>
             {badge}
           </div>
         </CardAction>
