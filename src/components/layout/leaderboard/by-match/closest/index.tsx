@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "~/components/ui/card";
 import { EmptyListError } from "~/errors";
+import { formatPlural } from "~/lib/utils";
 import { api } from "~/trpc/react";
 import { MatchSummary } from "../match-summary";
 
@@ -32,7 +33,12 @@ export function LeaderboardMatchClosest() {
             match.scoreDispute &&
             match.scoreDispute > 0 && (
               <div className="text-muted-foreground text-sm">
-                Vencido por <strong>{match.scoreDispute}</strong> ponto(s)
+                Vencido por <strong>{match.scoreDispute}</strong>{" "}
+                {formatPlural({
+                  count: match.scoreDispute,
+                  singular: "ponto",
+                  plural: "pontos",
+                })}
               </div>
             )
           }
