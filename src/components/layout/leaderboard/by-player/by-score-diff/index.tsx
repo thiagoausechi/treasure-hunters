@@ -6,17 +6,9 @@ import {
 } from "~/components/layout/leaderboard/stats/player/score-diff";
 import { Card, CardContent } from "~/components/ui/card";
 import { EmptyListError } from "~/errors";
+import { getByPerformanceTier } from "~/lib/performance-tier";
 import { api } from "~/trpc/react";
 import { PlayerPlacement } from "../player-placement";
-
-const tierConfig = {
-  0: { label: "Sem Classificação" },
-  1: { label: "Soberano" },
-  2: { label: "Dominante" },
-  3: { label: "Equilibrado" },
-  4: { label: "Em Apuros" },
-  5: { label: "Em Dificuldade" },
-} as const;
 
 export function LeaderboardPlayerByScoreDiff() {
   const [data] = api.leaderboard.byScoreDifference.useSuspenseQuery({
@@ -38,16 +30,23 @@ export function LeaderboardPlayerByScoreDiff() {
       </Card>
 
       {data.map((ranking, index) => {
-        let config =
-          tierConfig[(ranking.performanceTier as keyof typeof tierConfig) ?? 0];
-
-        if (ranking.scoreDifference === 0) config = tierConfig[3];
+        const { label, rankDescription } = getByPerformanceTier({
+          tier: ranking.performanceTier,
+          scoreDifference: ranking.scoreDifference,
+        });
 
         return (
           <PlayerPlacement
             key={ranking.playerId}
             stats={[ScoreDiff(ranking), ScoreDiffBalance(ranking)]}
-            badge={<div className="flex justify-end">{config.label}</div>}
+            badge={
+              <p className="flex items-baseline justify-end gap-2">
+                <span className="text-muted-foreground text-xs">
+                  ({rankDescription})
+                </span>
+                <span>{label}</span>
+              </p>
+            }
             {...ranking}
             rank={index + 1}
           />
