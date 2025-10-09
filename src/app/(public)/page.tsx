@@ -14,14 +14,16 @@ export default async function PublicIndexPage() {
         <CardHeader>
           <CardTitle>Selecione para onde desejar seguir</CardTitle>
         </CardHeader>
-        <CardContent className="flex gap-4">
-          <NextLink href={DEFAULT_LEADERBOARD_PATH}>
-            <Button>Leaderboard</Button>
+        <CardContent className="flex flex-col gap-4 md:flex-row">
+          <NextLink href={DEFAULT_LEADERBOARD_PATH} className="w-full">
+            <Button className="w-full">Leaderboard</Button>
           </NextLink>
           {session?.user ? (
-            <Button variant="ghost">
-              <NextLink href={"/admin"}>Área Administrativa</NextLink>
-            </Button>
+            <NextLink href={"/admin"}>
+              <Button variant="ghost" className="w-full">
+                Área Administrativa
+              </Button>
+            </NextLink>
           ) : (
             <AdminLoginDialog />
           )}
