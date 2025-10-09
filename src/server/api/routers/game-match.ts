@@ -19,6 +19,7 @@ export const gameMatchRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const pendingMatch = await ctx.db.query.matches.findFirst({
         where: eq(matches.status, "PENDING"),
+        columns: { id: true },
       });
 
       if (pendingMatch)
@@ -63,6 +64,7 @@ export const gameMatchRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const pendingMatch = await ctx.db.query.matches.findFirst({
         where: eq(matches.status, "PENDING"),
+        columns: { id: true },
       });
 
       if (!pendingMatch)
@@ -113,6 +115,7 @@ export const gameMatchRouter = createTRPCRouter({
   cancel: adminProcedure.mutation(async ({ ctx }) => {
     const pendingMatch = await ctx.db.query.matches.findFirst({
       where: eq(matches.status, "PENDING"),
+      columns: { id: true },
     });
 
     if (!pendingMatch)
