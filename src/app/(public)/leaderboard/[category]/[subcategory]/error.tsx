@@ -19,8 +19,6 @@ export default function LeaderboardErrorPage({ error }: Props) {
   let title = "Ops, algo deu errado!";
   let description = "Ocorreu um erro inesperado.";
 
-  console.log(error);
-
   switch (error.constructor) {
     case EmptyListError:
       title = "A lista está vazia!";

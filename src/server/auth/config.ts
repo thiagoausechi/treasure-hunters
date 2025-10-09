@@ -38,8 +38,6 @@ export const authConfig = {
       async authorize(credentials) {
         if (!credentials) return null;
 
-        console.log("[DEBUG]", { credentials });
-
         const user = await db.query.adminUsers.findFirst({
           where: eq(adminUsers.name, credentials.name as string),
         });
