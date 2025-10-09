@@ -5,6 +5,7 @@ import {
   adminProcedure,
   createTRPCRouter,
   gameClientProcedure,
+  publicProcedure,
 } from "~/server/api/trpc";
 import { matchCollectedItems, matches } from "~/server/db/schema";
 
@@ -118,6 +119,15 @@ export const gameMatchRouter = createTRPCRouter({
         message: "Resultados da partida registrados com sucesso.",
       };
     }),
+
+  hasOpenMatch: publicProcedure.query(async ({ ctx }) => {
+    const pendingMatch = await ctx.db.query.matches.findFirst({
+      where: eq(matches.status, "PENDING"),
+      columns: { id: true },
+    });
+
+    return !!pendingMatch;
+  }),
 
   cancel: adminProcedure.mutation(async ({ ctx }) => {
     const pendingMatch = await ctx.db.query.matches.findFirst({
