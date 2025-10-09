@@ -30,6 +30,13 @@ export const gameMatchRouter = createTRPCRouter({
             "Já existe uma partida pendente. Por favor, finalize-a antes de iniciar uma nova.",
         };
 
+      if (input.bluePlayerId === input.pinkPlayerId) {
+        return {
+          success: false,
+          message: "Os jogadores devem ser diferentes.",
+        };
+      }
+
       const newMatch = await ctx.db
         .insert(matches)
         .values({
