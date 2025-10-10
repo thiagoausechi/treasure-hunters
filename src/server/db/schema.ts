@@ -104,6 +104,10 @@ export const matchesRelations = relations(matches, ({ one, many }) => ({
     relationName: "pink_player",
   }),
   collectedItems: many(matchCollectedItems),
+  startedByAdmin: one(adminUsers, {
+    fields: [matches.startedByAdminId],
+    references: [adminUsers.id],
+  }),
 }));
 
 export const itemsRelations = relations(matchCollectedItems, ({ one }) => ({
