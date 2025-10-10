@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
@@ -24,19 +25,17 @@ export const gameMatchRouter = createTRPCRouter({
       });
 
       if (pendingMatch)
-        return {
-          success: false,
-          matchId: pendingMatch.id,
+        throw new TRPCError({
+          code: "CONFLICT",
           message:
             "Já existe uma partida pendente. Por favor, finalize-a antes de iniciar uma nova.",
-        };
+        });
 
-      if (input.bluePlayerId === input.pinkPlayerId) {
-        return {
-          success: false,
+      if (input.bluePlayerId === input.pinkPlayerId)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
           message: "Os jogadores devem ser diferentes.",
-        };
-      }
+        });
 
       const newMatch = await ctx.db
         .insert(matches)
@@ -157,10 +156,10 @@ export const gameMatchRouter = createTRPCRouter({
     });
 
     if (!pendingMatch)
-      return {
-        success: false,
+      throw new TRPCError({
+        code: "NOT_FOUND",
         message: "Nenhuma partida em aberto para cancelar.",
-      };
+      });
 
     await ctx.db.delete(matches).where(eq(matches.id, pendingMatch.id));
 

@@ -17,14 +17,13 @@ import { api } from "~/trpc/react";
 
 export function StartMatchAction() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
   const [bluePlayerId, setBluePlayerId] = useState<string | undefined>();
   const [pinkPlayerId, setPinkPlayerId] = useState<string | undefined>();
   const { data: allPlayers, isLoading } = api.player.list.useQuery();
   const startMatchMutation = api.gameMatch.start.useMutation({
     onSuccess: () => router.push("/admin"),
-    onError: (error) => {
-      alert(`Erro ao iniciar partida: ${error.message}`);
-    },
+    onError: (error) => setError(error.message),
   });
 
   const bluePlayerOptions = useMemo(() => {
@@ -105,6 +104,8 @@ export function StartMatchAction() {
             )}
           </InputSelect>
         </div>
+
+        {error && <p className="text-destructive text-sm">{error}</p>}
       </CardContent>
 
       <CardFooter>
