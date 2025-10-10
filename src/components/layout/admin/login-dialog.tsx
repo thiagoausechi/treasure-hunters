@@ -41,7 +41,7 @@ export function AdminLoginDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost">Área Administrativa</Button>
+        <Button>Área Administrativa</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit} className="space-y-4">
