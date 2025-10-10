@@ -28,7 +28,7 @@ export function LeaderboardNav() {
 
 function CategoriesNav({ activeCategory }: NavItemProps) {
   return (
-    <ul className="grid grid-cols-2 gap-4">
+    <ul className="grid grid-cols-2 gap-2">
       {LEADERBOARD_NAV_DATA.map(({ slug, label, subcategories }) => {
         const fullPath =
           `${LEADERBOARD_BASE_PATH}/${slug}/${subcategories[0]!.slug}` as Route;
@@ -39,7 +39,7 @@ function CategoriesNav({ activeCategory }: NavItemProps) {
             href={fullPath}
             className={cn(
               buttonVariants({
-                variant: activeCategory === slug ? "default" : "secondary",
+                variant: activeCategory === slug ? "secondary" : "default",
               }),
               "font-serif",
             )}
@@ -71,7 +71,7 @@ function SubcategoriesNav({ activeCategory, pathname }: NavItemProps) {
             href={fullPath}
             className={cn(
               buttonVariants({
-                variant: isActive ? "default" : "secondary",
+                variant: isActive ? "secondary" : "default",
                 size: "sm",
               }),
               { "font-bold": isActive },
