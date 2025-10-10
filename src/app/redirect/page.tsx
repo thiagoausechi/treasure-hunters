@@ -7,7 +7,7 @@ interface RedirectPageProps {
   };
 }
 
-export function RedirectPage(props: RedirectPageProps) {
+export default function RedirectPage(props: RedirectPageProps) {
   switch (props.searchParams.to) {
     case "feira-profissoes-fema":
       return redirect(DEFAULT_LEADERBOARD_PATH);
