@@ -29,7 +29,7 @@ export const leaderboardRouter = createTRPCRouter({
       return ctx.db
         .select()
         .from(playerRankingsView)
-        .where(gte(playerRankingsView.totalMatches, 5)) // Filtra jogadores com no mínimo 5 partidas
+        .where(gte(playerRankingsView.totalMatches, 5))
         .orderBy(
           desc(playerRankingsView.winRate),
           desc(playerRankingsView.totalWins),
