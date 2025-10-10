@@ -43,6 +43,7 @@ export const gameMatchRouter = createTRPCRouter({
         .values({
           bluePlayerId: input.bluePlayerId,
           pinkPlayerId: input.pinkPlayerId,
+          startedByAdminId: ctx.session.user.id,
           status: "PENDING",
         })
         .returning({ id: matches.id });
@@ -127,6 +128,26 @@ export const gameMatchRouter = createTRPCRouter({
     });
 
     return !!pendingMatch;
+  }),
+
+  getPendingMatch: adminProcedure.query(async ({ ctx }) => {
+    const pendingMatch = await ctx.db.query.matches.findFirst({
+      where: eq(matches.status, "PENDING"),
+      columns: {
+        id: true,
+        bluePlayerId: true,
+        pinkPlayerId: true,
+        startedByAdminId: true,
+        createdAt: true,
+      },
+      with: {
+        bluePlayer: { columns: { name: true } },
+        pinkPlayer: { columns: { name: true } },
+        startedByAdmin: { columns: { name: true } },
+      },
+    });
+
+    return pendingMatch;
   }),
 
   cancel: adminProcedure.mutation(async ({ ctx }) => {
