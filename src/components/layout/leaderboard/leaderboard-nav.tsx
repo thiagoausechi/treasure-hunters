@@ -39,7 +39,7 @@ function CategoriesNav({ activeCategory }: NavItemProps) {
             href={fullPath}
             className={cn(
               buttonVariants({
-                variant: activeCategory === slug ? "secondary" : "default",
+                variant: activeCategory === slug ? "default" : "secondary",
               }),
               "font-serif",
             )}
@@ -71,7 +71,7 @@ function SubcategoriesNav({ activeCategory, pathname }: NavItemProps) {
             href={fullPath}
             className={cn(
               buttonVariants({
-                variant: isActive ? "secondary" : "default",
+                variant: isActive ? "default" : "secondary",
                 size: "sm",
               }),
               { "font-bold": isActive },

@@ -27,7 +27,7 @@ export default async function PublicIndexPage() {
       <footer className="grid shrink-0">
         <nav className="grid grid-cols-2 gap-4 py-4">
           <NextLink href={DEFAULT_LEADERBOARD_PATH} className="w-full">
-            <Button variant="secondary" className="w-full">
+            <Button className="w-full">
               <GameIcon name="GoldenChalice" />
               Leaderboard
             </Button>
@@ -35,7 +35,9 @@ export default async function PublicIndexPage() {
 
           {session?.user ? (
             <NextLink href={"/admin"}>
-              <Button className="w-full">Área Administrativa</Button>
+              <Button variant="secondary" className="w-full">
+                Área Administrativa
+              </Button>
             </NextLink>
           ) : (
             <AdminLoginDialog />
