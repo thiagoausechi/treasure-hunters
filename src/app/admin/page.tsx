@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -20,7 +21,10 @@ export default async function AdminMainPage() {
 
       <CardContent>
         <div className="flex flex-col gap-4">
-          <Button disabled>Gerenciar Partida</Button>
+          <NextLink href={"/admin/manage-match"}>
+            <Button className="w-full">Gerenciar Partida</Button>
+          </NextLink>
+
           <Button disabled>Cadastrar Jogador</Button>
           <Button disabled>Cadastrar Administrador</Button>
         </div>
