@@ -25,8 +25,9 @@ export default async function AdminMainPage() {
             <Button className="w-full">Gerenciar Partida</Button>
           </NextLink>
 
-          <Button disabled>Cadastrar Jogador</Button>
-          <Button disabled>Cadastrar Administrador</Button>
+          <NextLink href={"/admin/register-player"}>
+            <Button className="w-full">Cadastrar Jogador</Button>
+          </NextLink>
         </div>
       </CardContent>
     </Card>
