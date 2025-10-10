@@ -34,6 +34,10 @@ export const players = createTable(
     name: d.varchar({ length: 256 }),
     email: d.varchar({ length: 256 }).unique(),
     description: d.text(),
+
+    registeredByAdminId: d
+      .uuid()
+      .references(() => adminUsers.id, { onDelete: "set null" }),
     createdAt: d
       .timestamp({ withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
@@ -44,6 +48,13 @@ export const players = createTable(
 );
 
 export type Player = typeof players.$inferSelect;
+
+export const playersRelations = relations(players, ({ one }) => ({
+  registeredByAdmin: one(adminUsers, {
+    fields: [players.registeredByAdminId],
+    references: [adminUsers.id],
+  }),
+}));
 
 export const matchStatusEnum = pgEnum("match_status", ["PENDING", "COMPLETED"]);
 

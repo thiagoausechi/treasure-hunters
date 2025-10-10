@@ -1,0 +1,2 @@
+ALTER TABLE "treasure-hunters_player" ADD COLUMN "registeredByAdminId" uuid;--> statement-breakpoint
+ALTER TABLE "treasure-hunters_player" ADD CONSTRAINT "treasure-hunters_player_registeredByAdminId_treasure-hunters_admin_user_id_fk" FOREIGN KEY ("registeredByAdminId") REFERENCES "public"."treasure-hunters_admin_user"("id") ON DELETE set null ON UPDATE no action;
