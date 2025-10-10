@@ -8,7 +8,10 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto flex h-screen max-w-2xl flex-col px-4">
+    <div
+      id="public-layout"
+      className="mx-auto flex h-screen max-w-2xl flex-col px-4"
+    >
       <header className="shrink-0">
         <div className="flex justify-center py-4">
           <NextLink href="/">

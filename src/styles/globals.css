@@ -153,8 +153,16 @@
 }
 
 body {
-  background-image: url("/assets/img/background.png");
+  transition: background-image 0.3s ease-in-out;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+body:has(#public-layout) {
+  background-image: url("/assets/img/background.png");
+}
+
+body:has(#admin-layout) {
+  background-image: url("/assets/img/admin-background.png");
 }

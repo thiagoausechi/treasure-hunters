@@ -13,7 +13,10 @@ export default async function AdminLayout({
   if (!session?.user) redirect("/");
 
   return (
-    <div className="mx-auto flex h-screen max-w-2xl flex-col px-4">
+    <div
+      id="admin-layout"
+      className="mx-auto flex h-screen max-w-2xl flex-col px-4"
+    >
       <header className="shrink-0">
         <div className="flex justify-center py-4">
           <NextLink href="/">
