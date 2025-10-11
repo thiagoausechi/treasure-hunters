@@ -3,14 +3,14 @@
 import { Victories } from "~/components/layout/leaderboard/stats/player/victories";
 import { WinRate } from "~/components/layout/leaderboard/stats/player/win-rate";
 import { Card, CardContent } from "~/components/ui/card";
-import { EmptyListError } from "~/errors";
 import { api } from "~/trpc/react";
+import { EmptyList } from "../../empty-list";
 import { PlayerPlacement } from "../player-placement";
 
 export function LeaderboardPlayerByWinRate() {
   const [data] = api.leaderboard.byWinRate.useSuspenseQuery({ limit: 10 });
 
-  if (!data || data.length === 0) throw new EmptyListError();
+  if (!data || data.length === 0) return <EmptyList />;
 
   return (
     <div className="space-y-4">

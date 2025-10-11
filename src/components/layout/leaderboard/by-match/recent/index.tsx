@@ -1,14 +1,14 @@
 "use client";
 
-import { EmptyListError } from "~/errors";
 import { formatTimeAgo } from "~/lib/utils";
 import { api } from "~/trpc/react";
+import { EmptyList } from "../../empty-list";
 import { MatchSummary } from "../match-summary";
 
 export function LeaderboardMatchRecents() {
   const [data] = api.leaderboard.recentMatches.useSuspenseQuery({ limit: 10 });
 
-  if (!data || data.length === 0) throw new EmptyListError();
+  if (!data || data.length === 0) return <EmptyList />;
 
   return (
     <div className="space-y-4">

@@ -1,15 +1,15 @@
 "use client";
 
 import { Card, CardContent } from "~/components/ui/card";
-import { EmptyListError } from "~/errors";
 import { api } from "~/trpc/react";
+import { EmptyList } from "../../empty-list";
 import { Stat } from "../../stats";
 import { MatchSummary } from "../match-summary";
 
 export function LeaderboardMatchHighestScore() {
   const [data] = api.leaderboard.highestScore.useSuspenseQuery({ limit: 10 });
 
-  if (!data || data.length === 0) throw new EmptyListError();
+  if (!data || data.length === 0) return <EmptyList />;
 
   return (
     <div className="space-y-4">
