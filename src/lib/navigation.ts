@@ -1,18 +1,8 @@
 import type { Route } from "next";
-import type { ComponentType } from "react";
-import { LeaderboardMatchClashOfTitans } from "~/components/layout/leaderboard/by-match/clash-of-titans";
-import { LeaderboardMatchClosest } from "~/components/layout/leaderboard/by-match/closest";
-import { LeaderboardMatchHighestScore } from "~/components/layout/leaderboard/by-match/highest-score";
-import { LeaderboardMatchRecents } from "~/components/layout/leaderboard/by-match/recent";
-import { LeaderboardMatchRelevance } from "~/components/layout/leaderboard/by-match/relevance";
-import { LeaderboardPlayerByScoreDiff } from "~/components/layout/leaderboard/by-player/by-score-diff";
-import { LeaderboardPlayerByWinRate } from "~/components/layout/leaderboard/by-player/by-win-rate";
-import { LeaderboardPlayerByWins } from "~/components/layout/leaderboard/by-player/by-wins";
 
 export type Subcategory = {
   slug: string;
   label: string;
-  component: ComponentType | null;
 };
 
 export type Category = {
@@ -29,17 +19,14 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "by-wins",
         label: "Vitórias",
-        component: LeaderboardPlayerByWins,
       },
       {
         slug: "by-win-rate",
         label: "Win Rate",
-        component: LeaderboardPlayerByWinRate,
       },
       {
         slug: "by-score-diff",
         label: "Saldo",
-        component: LeaderboardPlayerByScoreDiff,
       },
     ],
   },
@@ -50,27 +37,22 @@ export const LEADERBOARD_NAV_DATA: Category[] = [
       {
         slug: "recent",
         label: "Recentes",
-        component: LeaderboardMatchRecents,
       },
       {
         slug: "relevance",
         label: "Relevância",
-        component: LeaderboardMatchRelevance,
       },
       {
         slug: "closest",
         label: "Acirradas",
-        component: LeaderboardMatchClosest,
       },
       {
         slug: "highest-score",
         label: "Pontuação",
-        component: LeaderboardMatchHighestScore,
       },
       {
         slug: "clash-of-titans",
         label: "Duelo de Titãs",
-        component: LeaderboardMatchClashOfTitans,
       },
     ],
   },
