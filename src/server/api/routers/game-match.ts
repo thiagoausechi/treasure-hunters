@@ -62,9 +62,9 @@ export const gameMatchRouter = createTRPCRouter({
         durationSeconds: z.number().int().min(0),
         collectedItems: z.array(
           z.object({
-            playerId: z.string().uuid(),
-            itemName: z.string(),
-            quantity: z.number().int().min(1),
+            depositedBy: z.enum(["BLUE", "PINK"]),
+            depositedAt: z.enum(["BLUE", "PINK"]),
+            itemId: z.string(),
           }),
         ),
       }),
@@ -72,7 +72,6 @@ export const gameMatchRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const pendingMatch = await ctx.db.query.matches.findFirst({
         where: eq(matches.status, "PENDING"),
-        columns: { id: true },
       });
 
       if (!pendingMatch)
@@ -81,6 +80,26 @@ export const gameMatchRouter = createTRPCRouter({
           message:
             "Nenhuma partida oficial encontrada. Resultados descartados (partida amistosa).",
         };
+
+      if (!pendingMatch.bluePlayerId || !pendingMatch.pinkPlayerId) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message:
+            "A partida pendente está corrompida e não possui os IDs dos jogadores.",
+        });
+      }
+
+      const playerIdMap = {
+        BLUE: pendingMatch.bluePlayerId,
+        PINK: pendingMatch.pinkPlayerId,
+      } as const;
+
+      const itemsToInsert = input.collectedItems.map((item) => ({
+        matchId: pendingMatch.id,
+        itemId: item.itemId,
+        depositedByPlayerId: playerIdMap[item.depositedBy],
+        depositedAtPlayerId: playerIdMap[item.depositedAt],
+      }));
 
       await ctx.db.transaction(async (tx) => {
         await tx
@@ -93,14 +112,8 @@ export const gameMatchRouter = createTRPCRouter({
           })
           .where(eq(matches.id, pendingMatch.id));
 
-        if (input.collectedItems.length > 0) {
-          const itemsToInsert = input.collectedItems.map((item) => ({
-            ...item,
-            matchId: pendingMatch.id,
-          }));
-
+        if (itemsToInsert.length > 0)
           await tx.insert(matchCollectedItems).values(itemsToInsert);
-        }
       });
 
       await ctx.db.execute(

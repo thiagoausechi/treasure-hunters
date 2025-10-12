@@ -63,8 +63,14 @@ export const matches = createTable("match", (d) => ({
     .uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  bluePlayerId: d.uuid().references(() => players.id),
-  pinkPlayerId: d.uuid().references(() => players.id),
+  bluePlayerId: d
+    .uuid()
+    .references(() => players.id)
+    .notNull(),
+  pinkPlayerId: d
+    .uuid()
+    .references(() => players.id)
+    .notNull(),
 
   blueScore: d.integer(),
   pinkScore: d.integer(),
@@ -93,12 +99,15 @@ export const matchCollectedItems = createTable("match_collected_item", (d) => ({
     .uuid()
     .references(() => matches.id, { onDelete: "cascade" })
     .notNull(),
-  playerId: d
+  depositedByPlayerId: d
     .uuid()
     .references(() => players.id)
     .notNull(),
-  itemName: d.varchar("item_name", { length: 256 }).notNull(),
-  quantity: d.integer().default(1).notNull(),
+  depositedAtPlayerId: d
+    .uuid()
+    .references(() => players.id)
+    .notNull(),
+  itemId: d.varchar("item_id", { length: 256 }).notNull(),
 }));
 
 export type MatchCollectedItem = typeof matchCollectedItems.$inferSelect;
@@ -126,8 +135,14 @@ export const itemsRelations = relations(matchCollectedItems, ({ one }) => ({
     fields: [matchCollectedItems.matchId],
     references: [matches.id],
   }),
-  player: one(players, {
-    fields: [matchCollectedItems.playerId],
+  depositingPlayer: one(players, {
+    fields: [matchCollectedItems.depositedByPlayerId],
     references: [players.id],
+    relationName: "depositing_player",
+  }),
+  depositedAtPlayer: one(players, {
+    fields: [matchCollectedItems.depositedAtPlayerId],
+    references: [players.id],
+    relationName: "deposited_at_player",
   }),
 }));

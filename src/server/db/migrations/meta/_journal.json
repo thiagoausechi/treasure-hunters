@@ -29,6 +29,13 @@
       "when": 1760130347484,
       "tag": "0003_light_kate_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1760289789292,
+      "tag": "0004_bumpy_master_chief",
+      "breakpoints": true
     }
   ]
 }
