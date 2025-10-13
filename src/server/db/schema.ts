@@ -24,6 +24,21 @@ export const adminUsers = createTable("admin_user", (d) => ({
 
 export type AdminUser = typeof adminUsers.$inferSelect;
 
+export const gameClients = createTable("game_client", (d) => ({
+  id: d
+    .uuid()
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  description: d.varchar("description", { length: 256 }).notNull(),
+  apiKey: d.varchar("api_key", { length: 256 }).notNull(),
+  createdAt: d
+    .timestamp({ withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+}));
+
+export type GameClient = typeof gameClients.$inferSelect;
+
 export const players = createTable(
   "player",
   (d) => ({
@@ -81,6 +96,9 @@ export const matches = createTable("match", (d) => ({
   startedByAdminId: d
     .uuid()
     .references(() => adminUsers.id, { onDelete: "set null" }),
+  endedByGameClientId: d
+    .uuid()
+    .references(() => gameClients.id, { onDelete: "set null" }),
   createdAt: d
     .timestamp({ withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
@@ -127,6 +145,10 @@ export const matchesRelations = relations(matches, ({ one, many }) => ({
   startedByAdmin: one(adminUsers, {
     fields: [matches.startedByAdminId],
     references: [adminUsers.id],
+  }),
+  endedByGameClient: one(gameClients, {
+    fields: [matches.endedByGameClientId],
+    references: [gameClients.id],
   }),
 }));
 
