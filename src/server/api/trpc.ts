@@ -7,12 +7,13 @@
  * need to use are documented accordingly near the end.
  */
 import { initTRPC, TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { env } from "~/env";
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { gameClients } from "../db/schema";
 
 /**
  * 1. CONTEXT
@@ -127,7 +128,12 @@ export const adminProcedure = t.procedure
 export const gameClientProcedure = t.procedure.use(async ({ ctx, next }) => {
   const apiKey = ctx.headers.get("x-api-key");
 
-  if (apiKey === env.GAME_CLIENT_API_KEY) return next();
+  const gameClient = await ctx.db.query.gameClients.findFirst({
+    where: eq(gameClients.apiKey, apiKey ?? ""),
+    columns: { id: true },
+  });
+
+  if (gameClient) return next();
 
   throw new TRPCError({
     code: "UNAUTHORIZED",

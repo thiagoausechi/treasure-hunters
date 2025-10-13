@@ -8,7 +8,7 @@ import {
   gameClientProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { matchCollectedItems, matches } from "~/server/db/schema";
+import { gameClients, matchCollectedItems, matches } from "~/server/db/schema";
 
 export const gameMatchRouter = createTRPCRouter({
   start: adminProcedure
@@ -101,6 +101,11 @@ export const gameMatchRouter = createTRPCRouter({
         depositedAtPlayerId: playerIdMap[item.depositedAt],
       }));
 
+      const gameClient = await ctx.db.query.gameClients.findFirst({
+        where: eq(gameClients.apiKey, ctx.headers.get("x-api-key") ?? ""),
+        columns: { id: true },
+      });
+
       await ctx.db.transaction(async (tx) => {
         await tx
           .update(matches)
@@ -108,6 +113,7 @@ export const gameMatchRouter = createTRPCRouter({
             blueScore: input.blueScore,
             pinkScore: input.pinkScore,
             durationInSeconds: input.durationSeconds,
+            endedByGameClientId: gameClient?.id,
             status: "COMPLETED",
           })
           .where(eq(matches.id, pendingMatch.id));
