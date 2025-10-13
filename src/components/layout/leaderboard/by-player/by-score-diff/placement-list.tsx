@@ -24,11 +24,11 @@ export function LeaderboardPlayerByScoreDiffPlacementList() {
         key={ranking.playerId}
         stats={[ScoreDiff(ranking), ScoreDiffBalance(ranking)]}
         badge={
-          <p className="flex items-baseline justify-end gap-2">
-            <span className="text-muted-foreground text-xs">
+          <p className="flex flex-col-reverse items-end justify-end gap-2 sm:flex-row sm:items-baseline">
+            <span className="text-muted-foreground grow text-xs">
               ({rankDescription})
             </span>
-            <span>{label}</span>
+            <span className="shrink-0 text-right">{label}</span>
           </p>
         }
         {...ranking}
