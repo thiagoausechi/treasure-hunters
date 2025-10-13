@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 
+import { Analytics } from "@vercel/analytics/next";
 import { type Metadata } from "next";
 import { Fira_Code, Press_Start_2P } from "next/font/google";
 
@@ -41,6 +42,7 @@ export default function RootLayout({
     >
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
+        <Analytics />
       </body>
     </html>
   );
