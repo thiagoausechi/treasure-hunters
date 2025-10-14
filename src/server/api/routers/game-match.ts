@@ -77,8 +77,7 @@ export const gameMatchRouter = createTRPCRouter({
       if (!pendingMatch)
         return {
           success: true,
-          message:
-            "Nenhuma partida oficial encontrada. Resultados descartados (partida amistosa).",
+          message: "Nenhuma partida oficial encontrada (partida amistosa).",
         };
 
       if (!pendingMatch.bluePlayerId || !pendingMatch.pinkPlayerId) {
