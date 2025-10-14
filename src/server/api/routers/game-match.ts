@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
+import { getFirstName } from "~/lib/first-name";
 
 import {
   adminProcedure,
@@ -145,6 +146,36 @@ export const gameMatchRouter = createTRPCRouter({
     });
 
     return !!pendingMatch;
+  }),
+
+  isRankedMatch: gameClientProcedure.query(async ({ ctx }) => {
+    const pendingMatch = await ctx.db.query.matches.findFirst({
+      where: eq(matches.status, "PENDING"),
+      with: {
+        bluePlayer: { columns: { name: true } },
+        pinkPlayer: { columns: { name: true } },
+      },
+      columns: {},
+    });
+
+    if (!pendingMatch) {
+      return {
+        success: true,
+        isRanked: false,
+        message: "Nenhuma partida oficial encontrada.",
+      };
+    }
+
+    const bluePlayerName = getFirstName(pendingMatch.bluePlayer.name ?? "Azul");
+    const pinkPlayerName = getFirstName(pendingMatch.pinkPlayer.name ?? "Rosa");
+
+    return {
+      success: true,
+      isRanked: true,
+      message: `Partida oficial em andamento entre ${bluePlayerName} (Azul) e ${pinkPlayerName} (Rosa).`,
+      bluePlayerName,
+      pinkPlayerName,
+    };
   }),
 
   getPendingMatch: adminProcedure.query(async ({ ctx }) => {
