@@ -43,6 +43,13 @@
       "when": 1760347364832,
       "tag": "0005_colossal_shard",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791403520017,
+      "tag": "0006_blue_jocasta",
+      "breakpoints": true
     }
   ]
 }

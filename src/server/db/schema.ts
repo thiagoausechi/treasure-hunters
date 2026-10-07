@@ -78,14 +78,8 @@ export const matches = createTable("match", (d) => ({
     .uuid()
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  bluePlayerId: d
-    .uuid()
-    .references(() => players.id)
-    .notNull(),
-  pinkPlayerId: d
-    .uuid()
-    .references(() => players.id)
-    .notNull(),
+  bluePlayerId: d.uuid().references(() => players.id),
+  pinkPlayerId: d.uuid().references(() => players.id),
 
   blueScore: d.integer(),
   pinkScore: d.integer(),

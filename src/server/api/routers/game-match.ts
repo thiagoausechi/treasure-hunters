@@ -166,8 +166,12 @@ export const gameMatchRouter = createTRPCRouter({
       };
     }
 
-    const bluePlayerName = getFirstName(pendingMatch.bluePlayer.name ?? "Azul");
-    const pinkPlayerName = getFirstName(pendingMatch.pinkPlayer.name ?? "Rosa");
+    const bluePlayerName = getFirstName(
+      pendingMatch.bluePlayer?.name ?? "Azul",
+    );
+    const pinkPlayerName = getFirstName(
+      pendingMatch.pinkPlayer?.name ?? "Rosa",
+    );
 
     return {
       success: true,
