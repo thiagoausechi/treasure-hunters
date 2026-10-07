@@ -75,11 +75,31 @@ export const gameMatchRouter = createTRPCRouter({
         where: eq(matches.status, "PENDING"),
       });
 
-      if (!pendingMatch)
+      const gameClient = await ctx.db.query.gameClients.findFirst({
+        where: eq(gameClients.apiKey, ctx.headers.get("x-api-key") ?? ""),
+        columns: { id: true },
+      });
+
+      // Partida amistosa: registra só o histórico.
+      // Sem jogadores, fica fora dos rankings.
+      if (!pendingMatch) {
+        const [friendlyMatch] = await ctx.db
+          .insert(matches)
+          .values({
+            blueScore: input.blueScore,
+            pinkScore: input.pinkScore,
+            durationInSeconds: input.durationSeconds,
+            endedByGameClientId: gameClient?.id,
+            status: "COMPLETED",
+          })
+          .returning({ id: matches.id });
+
         return {
           success: true,
-          message: "Nenhuma partida oficial encontrada (partida amistosa).",
+          matchId: friendlyMatch!.id,
+          message: "Partida amistosa registrada com sucesso.",
         };
+      }
 
       if (!pendingMatch.bluePlayerId || !pendingMatch.pinkPlayerId) {
         throw new TRPCError({
@@ -100,11 +120,6 @@ export const gameMatchRouter = createTRPCRouter({
         depositedByPlayerId: playerIdMap[item.depositedBy],
         depositedAtPlayerId: playerIdMap[item.depositedAt],
       }));
-
-      const gameClient = await ctx.db.query.gameClients.findFirst({
-        where: eq(gameClients.apiKey, ctx.headers.get("x-api-key") ?? ""),
-        columns: { id: true },
-      });
 
       await ctx.db.transaction(async (tx) => {
         await tx
