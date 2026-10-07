@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { desc, eq, sql } from "drizzle-orm";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { z } from "zod";
-import { getFirstName } from "~/lib/first-name";
 
+import { getFirstName } from "~/lib/first-name";
 import {
   adminProcedure,
   createTRPCRouter,
@@ -10,6 +11,8 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { gameClients, matchCollectedItems, matches } from "~/server/db/schema";
+
+const LATEST_MATCHES_TAG = "latest-matches";
 
 export const gameMatchRouter = createTRPCRouter({
   start: adminProcedure
@@ -97,6 +100,8 @@ export const gameMatchRouter = createTRPCRouter({
           })
           .returning({ id: matches.id });
 
+        revalidateTag(LATEST_MATCHES_TAG);
+
         return {
           success: true,
           matchId: friendlyMatch!.id,
@@ -139,6 +144,8 @@ export const gameMatchRouter = createTRPCRouter({
         if (itemsToInsert.length > 0)
           await tx.insert(matchCollectedItems).values(itemsToInsert);
       });
+
+      revalidateTag(LATEST_MATCHES_TAG);
 
       await ctx.db.execute(
         sql`REFRESH MATERIALIZED VIEW CONCURRENTLY "treasure-hunters_player_rankings";`,
@@ -203,28 +210,34 @@ export const gameMatchRouter = createTRPCRouter({
   latest: publicProcedure
     .input(z.object({ limit: z.number().int().min(1).max(50).default(10) }))
     .query(async ({ ctx, input }) => {
-      const latestMatches = await ctx.db.query.matches.findMany({
-        where: eq(matches.status, "COMPLETED"),
-        // Partidas oficiais são criadas ao iniciar e atualizadas ao encerrar;
-        // amistosas são criadas já encerradas.
-        orderBy: ({ updatedAt, createdAt }) =>
-          desc(sql`coalesce(${updatedAt}, ${createdAt})`),
-        limit: input.limit,
-        columns: {
-          id: true,
-          bluePlayerId: true,
-          pinkPlayerId: true,
-          blueScore: true,
-          pinkScore: true,
-          durationInSeconds: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-        with: {
-          bluePlayer: { columns: { name: true } },
-          pinkPlayer: { columns: { name: true } },
-        },
-      });
+      const getLatestMatches = unstable_cache(
+        (limit: number) =>
+          ctx.db.query.matches.findMany({
+            where: eq(matches.status, "COMPLETED"),
+            // Partidas oficiais são criadas ao iniciar e atualizadas ao encerrar;
+            // amistosas são criadas já encerradas.
+            orderBy: ({ updatedAt, createdAt }) =>
+              desc(sql`coalesce(${updatedAt}, ${createdAt})`),
+            limit,
+            columns: {
+              id: true,
+              bluePlayerId: true,
+              pinkPlayerId: true,
+              blueScore: true,
+              pinkScore: true,
+              durationInSeconds: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+            with: {
+              bluePlayer: { columns: { name: true } },
+              pinkPlayer: { columns: { name: true } },
+            },
+          }),
+        [LATEST_MATCHES_TAG],
+        { tags: [LATEST_MATCHES_TAG] },
+      );
+      const latestMatches = await getLatestMatches(input.limit);
 
       return latestMatches.map((match) => ({
         matchId: match.id,
@@ -236,7 +249,7 @@ export const gameMatchRouter = createTRPCRouter({
         pinkPlayerName: match.pinkPlayer?.name ?? "Rosa",
         pinkScore: match.pinkScore,
         durationInSeconds: match.durationInSeconds,
-        endedAt: match.updatedAt ?? match.createdAt,
+        endedAt: new Date(match.updatedAt ?? match.createdAt),
       }));
     }),
 
