@@ -11,13 +11,21 @@ import { MiddleIndicator, PlayerSideProgress } from "~/components/ui/progress";
 import { cn } from "~/lib/utils";
 import type { RelevanceScoreRanking } from "~/server/db/views";
 
-type Props = Omit<RelevanceScoreRanking, "relevanceScore"> & {
-  relevanceScore?: RelevanceScoreRanking["relevanceScore"];
+type Props = Pick<
+  RelevanceScoreRanking,
+  | "bluePlayerId"
+  | "bluePlayerName"
+  | "blueScore"
+  | "pinkPlayerId"
+  | "pinkPlayerName"
+  | "pinkScore"
+> & {
   footer?: React.ReactNode;
+  isRanked?: boolean;
 };
 
 export function MatchSummary(props: Props) {
-  const { bluePlayerName, pinkPlayerName } = props;
+  const { bluePlayerName, pinkPlayerName, isRanked } = props;
   const blueScore = props.blueScore ?? 0;
   const pinkScore = props.pinkScore ?? 0;
 
@@ -32,6 +40,11 @@ export function MatchSummary(props: Props) {
   return (
     <Card className="gap-2">
       <CardHeader>
+        {isRanked !== undefined && (
+          <CardTitle className="text-center text-sm italic">
+            {isRanked ? "Competitiva" : "Amistosa"}
+          </CardTitle>
+        )}
         <CardTitle className="grid grid-cols-1 gap-2 font-normal sm:grid-cols-[1fr_auto_1fr] sm:gap-0">
           {/* Blue Player */}
           <div className="flex gap-2 text-left">
