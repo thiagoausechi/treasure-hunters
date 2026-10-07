@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getFirstName } from "~/lib/first-name";
 
@@ -196,6 +196,46 @@ export const gameMatchRouter = createTRPCRouter({
       pinkPlayerName,
     };
   }),
+
+  latest: publicProcedure
+    .input(z.object({ limit: z.number().int().min(1).max(50).default(10) }))
+    .query(async ({ ctx, input }) => {
+      const latestMatches = await ctx.db.query.matches.findMany({
+        where: eq(matches.status, "COMPLETED"),
+        // Partidas oficiais são criadas ao iniciar e atualizadas ao encerrar;
+        // amistosas são criadas já encerradas.
+        orderBy: ({ updatedAt, createdAt }) =>
+          desc(sql`coalesce(${updatedAt}, ${createdAt})`),
+        limit: input.limit,
+        columns: {
+          id: true,
+          bluePlayerId: true,
+          pinkPlayerId: true,
+          blueScore: true,
+          pinkScore: true,
+          durationInSeconds: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        with: {
+          bluePlayer: { columns: { name: true } },
+          pinkPlayer: { columns: { name: true } },
+        },
+      });
+
+      return latestMatches.map((match) => ({
+        matchId: match.id,
+        isRanked: match.bluePlayerId !== null,
+        bluePlayerId: match.bluePlayerId,
+        bluePlayerName: match.bluePlayer?.name ?? "Azul",
+        blueScore: match.blueScore,
+        pinkPlayerId: match.pinkPlayerId,
+        pinkPlayerName: match.pinkPlayer?.name ?? "Rosa",
+        pinkScore: match.pinkScore,
+        durationInSeconds: match.durationInSeconds,
+        endedAt: match.updatedAt ?? match.createdAt,
+      }));
+    }),
 
   getPendingMatch: adminProcedure.query(async ({ ctx }) => {
     const pendingMatch = await ctx.db.query.matches.findFirst({
