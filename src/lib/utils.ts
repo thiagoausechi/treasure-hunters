@@ -27,6 +27,19 @@ export function formatTimeAgo(date: Date) {
   }
 }
 
+export function formatDuration(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  if (hours > 0) {
+    const remainingMinutes = Math.floor((seconds % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const remainingSeconds = (seconds % 60).toString().padStart(2, "0");
+    return `${hours}h${remainingMinutes}m${remainingSeconds}s`;
+  }
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = (seconds % 60).toString().padStart(2, "0");
+  return `${minutes}m${remainingSeconds}s`;
+}
 export function formatPlural({
   count,
   singular,
