@@ -1,7 +1,8 @@
 "use client";
 
+import { use } from "react";
 import { MatchSummary } from "~/components/layout/leaderboard/by-match/match-summary";
-import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { formatDuration, formatTimeAgo } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
@@ -11,9 +12,11 @@ import { api } from "~/trpc/react";
  */
 const REFRESH_INTERVAL_MS = 5_000;
 
-export default function LatestMatchesPage() {
-  const { data: matchList } = api.gameMatch.latest.useQuery(
-    { limit: 10 },
+export default function LatestMatchesPage(props: PageProps<"/latest-matches">) {
+  const { limit } = use(props.searchParams);
+
+  const { data: matchList, error } = api.gameMatch.latest.useQuery(
+    { limit: limit ? Number(limit) : undefined },
     {
       refetchInterval: REFRESH_INTERVAL_MS,
       // Caso aberta em background, o polling é pausado. Mas queremos que continue.
@@ -25,6 +28,17 @@ export default function LatestMatchesPage() {
 
   return (
     <main className="min-h-0 flex-1 space-y-4 overflow-y-auto pb-4">
+      {error && !matchList && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Não foi possível carregar as partidas.</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {error.data?.zodError?.fieldErrors.limit?.[0] ?? error.message}
+          </CardContent>
+        </Card>
+      )}
+
       {matchList?.length === 0 && (
         <Card>
           <CardHeader>
