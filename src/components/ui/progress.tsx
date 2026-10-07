@@ -5,11 +5,16 @@ import * as React from "react";
 
 import { cn } from "~/lib/utils";
 
+type ProgressProps = React.ComponentProps<typeof ProgressPrimitive.Root> & {
+  middleIndicator?: React.ReactNode;
+};
+
 function Progress({
   className,
   value,
+  middleIndicator,
   ...props
-}: React.ComponentProps<typeof ProgressPrimitive.Root>) {
+}: ProgressProps) {
   return (
     <ProgressPrimitive.Root
       data-slot="progress"
@@ -19,6 +24,12 @@ function Progress({
       )}
       {...props}
     >
+      {middleIndicator && (
+        <div className="absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2">
+          {middleIndicator}
+        </div>
+      )}
+
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
         className="bg-primary h-full w-full flex-1 transition-all"
@@ -28,10 +39,14 @@ function Progress({
   );
 }
 
+function MiddleIndicator() {
+  return <div className="bg-card h-2 w-1" />;
+}
+
 function PlayerSideProgress({
   bluePercentage,
   ...props
-}: React.ComponentProps<typeof ProgressPrimitive.Root> & {
+}: ProgressProps & {
   bluePercentage: number;
 }) {
   return (
@@ -39,4 +54,4 @@ function PlayerSideProgress({
   );
 }
 
-export { PlayerSideProgress, Progress };
+export { MiddleIndicator, PlayerSideProgress, Progress };
