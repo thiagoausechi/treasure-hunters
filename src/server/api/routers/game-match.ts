@@ -61,6 +61,7 @@ export const gameMatchRouter = createTRPCRouter({
         blueScore: z.number().int().min(0),
         pinkScore: z.number().int().min(0),
         durationSeconds: z.number().int().min(0),
+        isRanked: z.boolean().optional(),
         collectedItems: z.array(
           z.object({
             depositedBy: z.enum(["BLUE", "PINK"]),
@@ -82,7 +83,9 @@ export const gameMatchRouter = createTRPCRouter({
 
       // Partida amistosa: registra só o histórico.
       // Sem jogadores, fica fora dos rankings.
-      if (!pendingMatch) {
+      // Uma amistosa nunca encerra a partida oficial que um admin
+      // tenha iniciado enquanto ela estava em andamento.
+      if (!pendingMatch || input.isRanked === false) {
         const [friendlyMatch] = await ctx.db
           .insert(matches)
           .values({
