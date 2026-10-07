@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { GameIcon } from "~/components/ui/game-icon";
-import { PlayerSideProgress } from "~/components/ui/progress";
+import { MiddleIndicator, PlayerSideProgress } from "~/components/ui/progress";
 import { cn } from "~/lib/utils";
 import type { RelevanceScoreRanking } from "~/server/db/views";
 
@@ -76,7 +76,10 @@ export function MatchSummary(props: Props) {
       </CardHeader>
 
       <CardContent>
-        <PlayerSideProgress bluePercentage={progressValue} />
+        <PlayerSideProgress
+          bluePercentage={progressValue}
+          middleIndicator={<MiddleIndicator />}
+        />
       </CardContent>
 
       {!!props.footer && (
